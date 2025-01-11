@@ -8,11 +8,11 @@ import retrofit2.http.Query
 
 interface UnsplashApiService {
     @GET("/search/photos")
-    fun searchPhotos(
+    suspend fun searchPhotos(
         @Header("Authorization") authorization: String,
         @Query("query") query: String,
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 10
-    ): Call<PhotoResponseItem>
+    ): PhotoResponseItem
 
 }
