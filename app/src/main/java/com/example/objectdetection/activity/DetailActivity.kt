@@ -1,4 +1,4 @@
-package com.example.objectdetection
+package com.example.objectdetection.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
