@@ -10,6 +10,10 @@ import com.example.objectdetection.databinding.ActivityMainBinding
 
 class MainActivity : ComponentActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    private val linearLayoutManager = LinearLayoutManager(this)
+    private val gridLayoutManager = GridLayoutManager(this, 2)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -39,14 +43,14 @@ class MainActivity : ComponentActivity() {
             startActivity(intent)
         }
         binding.rvImage.adapter = adapter
-        binding.rvImage.layoutManager = LinearLayoutManager(this)
+        binding.rvImage.layoutManager = linearLayoutManager
         binding.ivList.setOnClickListener {
             binding.ivList.isSelected = !binding.ivList.isSelected
-            if (binding.ivList.isSelected) {
-                // grid layout
-                binding.rvImage.layoutManager = GridLayoutManager(this, 2)
+
+            binding.rvImage.layoutManager = if (binding.ivList.isSelected) {
+                gridLayoutManager
             } else {
-                binding.rvImage.layoutManager = LinearLayoutManager(this)
+                linearLayoutManager
             }
         }
     }
