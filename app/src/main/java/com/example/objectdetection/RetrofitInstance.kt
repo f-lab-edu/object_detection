@@ -7,7 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
     private const val BASE_URL = "https://api.unsplash.com/"
-    const val ACCESS_KEY = "Ly-gZn-_4v-ACbd3SZ7diJoQgRNLb2w-_J1nrb3Jv3o"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

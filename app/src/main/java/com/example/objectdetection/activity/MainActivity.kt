@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.objectdetection.BuildConfig
 import com.example.objectdetection.ImageListAdapter
 import com.example.objectdetection.MainViewModel
 import com.example.objectdetection.RetrofitInstance
@@ -82,7 +83,7 @@ class MainActivity : ComponentActivity() {
     //TODO mvvm과 코루틴 적용필요
     private fun searchPhotos(query: String) {
         RetrofitInstance.api.searchPhotos(
-            authorization = "Client-ID ${RetrofitInstance.ACCESS_KEY}",
+            authorization = "Client-ID ${BuildConfig.UNSPLASH_ACCESS_KEY}",
             query = query
         ).enqueue(object : Callback<PhotoResponseItem> {
             override fun onResponse(

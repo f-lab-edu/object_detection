@@ -1,6 +1,7 @@
 package com.example.objectdetection.repository
 
 import android.util.Log
+import com.example.objectdetection.BuildConfig
 import com.example.objectdetection.RetrofitInstance
 import com.example.objectdetection.data.Photo
 import com.example.objectdetection.data.PhotoResponseItem
@@ -10,7 +11,7 @@ import retrofit2.Response
 
 class UnsplashRepository {
     private val api = RetrofitInstance.api
-    private val accessKey = RetrofitInstance.ACCESS_KEY
+    private val accessKey = BuildConfig.UNSPLASH_ACCESS_KEY
 
     suspend fun searchPhotos(query: String): List<Photo> {
         var result = emptyList<Photo>()
