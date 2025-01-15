@@ -4,36 +4,21 @@ import android.util.Log
 import com.example.objectdetection.BuildConfig
 import com.example.objectdetection.RetrofitInstance
 import com.example.objectdetection.data.Photo
-import com.example.objectdetection.data.PhotoResponseItem
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class UnsplashRepository {
     private val api = RetrofitInstance.api
     private val accessKey = BuildConfig.UNSPLASH_ACCESS_KEY
 
-    suspend fun searchPhotos(query: String): List<Photo> {
-        var result = emptyList<Photo>()
-        api.searchPhotos(
-            authorization = "Client-ID $accessKey",
-            query = query
-        ).enqueue(object : Callback<PhotoResponseItem> {
-            override fun onResponse(
-                call: Call<PhotoResponseItem>,
-                response: Response<PhotoResponseItem>
-            ) {
-                if (response.isSuccessful) {
-                    result = response.body()?.results ?: emptyList()
-                } else {
-                    Log.e("Unsplash", "Error: ${response.errorBody()?.string()}")
-                }
-            }
-
-            override fun onFailure(call: Call<PhotoResponseItem>, t: Throwable) {
-                Log.e("Unsplash", "Failure: ${t.message}")
-            }
-        })
-        return result
+    suspend fun searchPhotos(query: String): List<Photo>? {
+        return try {
+            val response = api.searchPhotos(
+                authorization = "Client-ID $accessKey",
+                query = query
+            )
+            response.results
+        } catch (e: Exception) {
+            Log.e("Unsplash", "Failure: ${e.message}")
+            null
+        }
     }
 }
