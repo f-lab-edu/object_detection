@@ -3,11 +3,13 @@ package com.example.objectdetection
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.objectdetection.data.Photo
 import com.example.objectdetection.databinding.ItemRecyclerBinding
 
 class ImageListAdapter(
-    private val imageList: List<String>,
-    private val onItemClick: (String) -> Unit
+    private var imageList: List<Photo>,
+    private val onItemClick: (Photo) -> Unit
 ) : RecyclerView.Adapter<ImageListAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -17,11 +19,16 @@ class ImageListAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        //TODO 아이템에 대해서 정리 필요
         val item = imageList[position]
+        holder.bind(item)
         holder.binding.root.setOnClickListener {
             onItemClick(item)
         }
+    }
+
+    fun updateData(newList: List<Photo>) {
+        imageList = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -29,7 +36,10 @@ class ImageListAdapter(
     }
 
     class Holder(val binding: ItemRecyclerBinding) : RecyclerView.ViewHolder(binding.root) {
-        //초기화 가능
-//        val image = binding.image
+        fun bind(photo: Photo) {
+            Glide.with(binding.root.context)
+                .load(photo.urls.small)
+                .into(binding.image)
+        }
     }
 }
