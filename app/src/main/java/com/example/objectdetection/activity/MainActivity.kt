@@ -8,13 +8,9 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.objectdetection.BuildConfig
 import com.example.objectdetection.ImageListAdapter
 import com.example.objectdetection.MainViewModel
 import com.example.objectdetection.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -58,9 +54,7 @@ class MainActivity : ComponentActivity() {
         binding.sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        viewModel.searchPhotos(query)
-                    }
+                    viewModel.searchPhotos(query)
                 }
                 return false
             }
