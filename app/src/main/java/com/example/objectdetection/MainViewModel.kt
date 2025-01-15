@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     private val unsplashRepository = UnsplashRepository()
 
-    private val _photos = MutableLiveData<List<Photo>>()
-    val photos: LiveData<List<Photo>> = _photos
+    private val _photos = MutableLiveData<List<Photo>?>()
+    val photos: LiveData<List<Photo>?> = _photos
 
     fun searchPhotos(query: String) {
         viewModelScope.launch {

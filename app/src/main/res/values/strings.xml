@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Snap detect</string>
+    <string name="api_error">Api communication error</string>
 </resources>

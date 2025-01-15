@@ -9,7 +9,7 @@ class UnsplashRepository {
     private val api = RetrofitInstance.api
     private val accessKey = BuildConfig.UNSPLASH_ACCESS_KEY
 
-    suspend fun searchPhotos(query: String): List<Photo> {
+    suspend fun searchPhotos(query: String): List<Photo>? {
         return try {
             val response = api.searchPhotos(
                 authorization = "Client-ID $accessKey",
@@ -18,7 +18,7 @@ class UnsplashRepository {
             response.results
         } catch (e: Exception) {
             Log.e("Unsplash", "Failure: ${e.message}")
-            emptyList()
+            null
         }
     }
 }

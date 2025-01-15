@@ -3,6 +3,7 @@ package com.example.objectdetection.activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.objectdetection.ImageListAdapter
 import com.example.objectdetection.MainViewModel
+import com.example.objectdetection.R
 import com.example.objectdetection.databinding.ActivityMainBinding
 
 class MainActivity : ComponentActivity() {
@@ -24,6 +26,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        val apiErrorMessage = getString(R.string.api_error)
+
         setContentView(binding.root)
         initSearchView()
 
@@ -45,7 +49,11 @@ class MainActivity : ComponentActivity() {
         }
 
         viewModel.photos.observe(this, Observer { photos ->
-            adapter.updateData(photos)
+            photos?.let {
+                adapter.updateData(photos)
+            } ?: run {
+                Toast.makeText(this@MainActivity, apiErrorMessage, Toast.LENGTH_LONG).show()
+            }
         })
     }
 
