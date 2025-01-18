@@ -38,7 +38,7 @@ class ImageListAdapter(
     class Holder(val binding: ItemRecyclerBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(photo: Photo) {
             Glide.with(binding.root.context)
-                .load(photo.urls.small)
+                .load(photo.urls?.small ?: "")
                 .into(binding.image)
         }
     }
