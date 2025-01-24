@@ -42,10 +42,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.rvImage.adapter = adapter
         binding.rvImage.layoutManager = linearLayoutManager
-        binding.ivList.setOnClickListener {
-            binding.ivList.isSelected = !binding.ivList.isSelected
+        binding.toolbar.ivList.setOnClickListener {
+            binding.toolbar.ivList.isSelected = !binding.toolbar.ivList.isSelected
 
-            binding.rvImage.layoutManager = if (binding.ivList.isSelected) {
+            binding.rvImage.layoutManager = if (binding.toolbar.ivList.isSelected) {
                 gridLayoutManager
             } else {
                 linearLayoutManager
