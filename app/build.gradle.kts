@@ -15,7 +15,11 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-        buildConfigField("String","UNSPLASH_ACCESS_KEY",project.properties["UNSPLASH_ACCESS_KEY"].toString())
+        buildConfigField(
+            "String",
+            "UNSPLASH_ACCESS_KEY",
+            project.properties["UNSPLASH_ACCESS_KEY"].toString()
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -51,8 +55,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    viewBinding{
-        enable=true
+    viewBinding {
+        enable = true
+    }
+    dataBinding {
+        enable = true
     }
 }
 
