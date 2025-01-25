@@ -17,7 +17,7 @@ class UnsplashRepository {
             )
             response.results
         } catch (e: Exception) {
-            Log.e("Unsplash", "Failure: ${e.message}")
+            Log.e("Unsplash", "Failure: ${e.message}", e)
             null
         }
     }
