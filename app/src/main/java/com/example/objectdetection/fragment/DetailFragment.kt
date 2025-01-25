@@ -31,12 +31,17 @@ class DetailFragment : Fragment() {
     ): View {
         _binding = FragmentDetailBinding.inflate(layoutInflater)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         photoUrl?.let {
             Glide.with(binding.root.context)
                 .load(photoUrl)
                 .into(binding.ivDetail)
         }
-        return binding.root
     }
 
     override fun onDestroyView() {
