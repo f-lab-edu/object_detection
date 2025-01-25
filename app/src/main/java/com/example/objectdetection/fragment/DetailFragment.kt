@@ -1,7 +1,6 @@
 package com.example.objectdetection.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +15,11 @@ class DetailFragment : Fragment() {
     }
 
     private var photoUrl: String? = null
-    private lateinit var binding: FragmentDetailBinding
+    private var _binding: FragmentDetailBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentDetailBinding.inflate(layoutInflater)
         arguments?.let {
             photoUrl = it.getString(PHOTO_URL)
         }
@@ -30,12 +29,19 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDetailBinding.inflate(layoutInflater)
+
         photoUrl?.let {
             Glide.with(binding.root.context)
                 .load(photoUrl)
                 .into(binding.ivDetail)
         }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

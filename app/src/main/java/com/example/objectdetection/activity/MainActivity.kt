@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         adapter = ImageListAdapter(emptyList()) { selectedImage ->
             val fragment = DetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(DetailFragment.PHOTO_URL, selectedImage.urls.small)
+                    putString(DetailFragment.PHOTO_URL, selectedImage.urls?.small)
                 }
             }
             setFragment(fragment)
