@@ -18,6 +18,7 @@ retrofit = "2.9.0"
 okhttp-logging-interceptor = "4.8.0"
 glide = "4.16.0"
 ksp = "1.9.20-1.0.14"
+fragment = "1.8.5"
 serialization = "1.6.0"
 retrofit2-kotlinx-serialization-converter = "0.8.0"
 
@@ -51,6 +52,8 @@ glide-compiler = { module = "com.github.bumptech.glide:ksp", version.ref = "glid
 retrofit2-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2-kotlinx-serialization-converter" }
 # kotlinx.serialization을 위한 라이브러리
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+fragment = {module = "androidx.fragment:fragment-ktx", version.ref = "fragment"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

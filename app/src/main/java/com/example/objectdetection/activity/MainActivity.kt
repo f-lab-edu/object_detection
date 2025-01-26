@@ -1,11 +1,11 @@
 package com.example.objectdetection.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,8 +13,9 @@ import com.example.objectdetection.ImageListAdapter
 import com.example.objectdetection.MainViewModel
 import com.example.objectdetection.R
 import com.example.objectdetection.databinding.ActivityMainBinding
+import com.example.objectdetection.fragment.DetailFragment
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ImageListAdapter
 
@@ -32,9 +33,12 @@ class MainActivity : ComponentActivity() {
         initSearchView()
 
         adapter = ImageListAdapter(emptyList()) { selectedImage ->
-            val intent = Intent(this, DetailActivity::class.java)
-//            intent.putExtra("image_name", selectedImage)
-            startActivity(intent)
+            val fragment = DetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(DetailFragment.PHOTO_URL, selectedImage.urls?.small)
+                }
+            }
+            setFragment(fragment)
         }
         binding.rvImage.adapter = adapter
         binding.rvImage.layoutManager = linearLayoutManager
@@ -72,5 +76,12 @@ class MainActivity : ComponentActivity() {
             }
 
         })
+    }
+
+    private fun setFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fv, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

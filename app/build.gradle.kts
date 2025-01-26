@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.glide)
+    implementation(libs.fragment)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.kotlinx.serialization.json)
     ksp(libs.glide.compiler)
