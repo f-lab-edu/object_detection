@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             val fragment = DetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(DetailFragment.PHOTO_URL, selectedImage.urls?.small)
+                    putString(DetailFragment.PHOTO_NAME, selectedImage.description)
                 }
             }
             setFragment(fragment)
@@ -83,5 +84,10 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fv, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.sv.clearFocus()
     }
 }
