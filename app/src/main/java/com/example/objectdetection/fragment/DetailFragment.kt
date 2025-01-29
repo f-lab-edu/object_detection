@@ -33,11 +33,8 @@ class DetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            photoUrl = it.getString(PHOTO_URL)
-            photoName = it.getString(PHOTO_NAME)
-        } ?: {
-            photoUrl = getString(R.string.unknown)
-            photoName = getString(R.string.unknown)
+            photoUrl = it.getString(PHOTO_URL) ?: getString(R.string.unknown)
+            photoName = it.getString(PHOTO_NAME) ?: getString(R.string.unknown)
         }
     }
 
