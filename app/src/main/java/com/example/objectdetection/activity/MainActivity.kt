@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val apiErrorMessage = getString(R.string.api_error)
 
         setContentView(binding.root)
         initSearchView()
@@ -53,13 +52,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.photos.observe(this, Observer { photos ->
+        viewModel.photos.observe(this) { photos ->
             photos?.let {
                 adapter.updateData(photos)
-            } ?: run {
-                Toast.makeText(this@MainActivity, apiErrorMessage, Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     private fun initSearchView() {
