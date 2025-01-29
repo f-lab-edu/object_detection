@@ -20,7 +20,8 @@ object RetrofitInstance {
     }
 
     private val client = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
+        .addInterceptor(ResponseInterceptor())
+        .addNetworkInterceptor(loggingInterceptor)
         .build()
 
     val api: UnsplashApiService = Retrofit.Builder()

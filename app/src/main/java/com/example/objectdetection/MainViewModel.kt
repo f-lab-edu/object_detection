@@ -26,11 +26,18 @@ class MainViewModel : ViewModel() {
     private val _imageSaved = MutableLiveData<Boolean>()
     val imageSaved: LiveData<Boolean> get() = _imageSaved
 
+    private val _apiError = MutableLiveData<String?>()
+    val apiError: LiveData<String?> = _apiError
+
 
     fun searchPhotos(query: String) {
         viewModelScope.launch {
-            val result = unsplashRepository.searchPhotos(query)
-            _photos.value = result
+            try {
+                val result = unsplashRepository.searchPhotos(query)
+                _photos.value = result
+            } catch (exception: Exception) {
+                _apiError.value = exception.message
+            }
         }
     }
 

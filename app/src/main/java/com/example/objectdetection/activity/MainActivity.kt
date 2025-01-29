@@ -57,6 +57,10 @@ class MainActivity : AppCompatActivity() {
                 adapter.updateData(photos)
             }
         }
+
+        viewModel.apiError.observe(this) { exceptionMessage ->
+            Toast.makeText(this@MainActivity, "$exceptionMessage", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun initSearchView() {
