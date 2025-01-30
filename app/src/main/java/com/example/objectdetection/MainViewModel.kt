@@ -68,10 +68,9 @@ class MainViewModel : ViewModel() {
                     val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                     val file = File(directory, fileName)
 
-                    val outputStream = FileOutputStream(file)
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                    outputStream.flush()
-                    outputStream.close()
+                    file.outputStream().use { outputStream ->
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    }
 
                     MediaScannerConnection.scanFile(context, arrayOf(file.absolutePath), arrayOf("image/jpeg"), null)
 
