@@ -16,7 +16,6 @@ import com.example.objectdetection.data.Photo
 import com.example.objectdetection.repository.UnsplashRepository
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
 
 class MainViewModel : ViewModel() {
     private val unsplashRepository = UnsplashRepository()
@@ -40,47 +39,52 @@ class MainViewModel : ViewModel() {
             val fileName = "${photoName}_${System.currentTimeMillis()}.jpg"
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    // Android 10 이상 (MediaStore 사용)
-                    val contentValues = ContentValues().apply {
-                        put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
-                        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                        put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-                        put(MediaStore.Images.Media.IS_PENDING, 1)
-                    }
-
-                    val resolver = context.contentResolver
-                    val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-                    imageUri?.let { uri ->
-                        resolver.openOutputStream(uri)?.use { outputStream ->
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                        }
-                        contentValues.clear()
-                        contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
-                        resolver.update(uri, contentValues, null, null)
-
-                        _imageSaved.value = true
-                    } ?: {
-                        _imageSaved.value = false
-                    }
+                    saveImageForAndroidOver10(context, bitmap, fileName)
                 } else {
-                    // Android 9 이하
-                    val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                    val file = File(directory, fileName)
-
-                    file.outputStream().use { outputStream ->
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                    }
-
-                    MediaScannerConnection.scanFile(context, arrayOf(file.absolutePath), arrayOf("image/jpeg"), null)
-
-                    _imageSaved.value = true
+                    saveImageForAndroidUnder10(context, bitmap, fileName)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.e("ObjectDetection", "image save error ${e.printStackTrace()}")
+                Log.e("ObjectDetection", "image save error ${e.message}")
                 _imageSaved.value = false
             }
         }
+    }
+
+    private fun saveImageForAndroidOver10(context: Context, bitmap: Bitmap, fileName: String) {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
+
+        val resolver = context.contentResolver
+        val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        imageUri?.let { uri ->
+            resolver.openOutputStream(uri)?.use { outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            }
+            contentValues.clear()
+            contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+            resolver.update(uri, contentValues, null, null)
+
+            _imageSaved.value = true
+        } ?: {
+            _imageSaved.value = false
+        }
+    }
+
+    private fun saveImageForAndroidUnder10(context: Context, bitmap: Bitmap, fileName: String) {
+        val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val file = File(directory, fileName)
+
+        file.outputStream().use { outputStream ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        }
+        MediaScannerConnection.scanFile(context, arrayOf(file.absolutePath), arrayOf("image/jpeg"), null)
+
+        _imageSaved.value = true
     }
 }
