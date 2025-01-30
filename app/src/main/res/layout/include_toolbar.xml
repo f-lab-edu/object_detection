@@ -24,7 +24,8 @@
             android:layout_gravity="center"
             android:text="@string/app_name"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="@{isMain? View.VISIBLE : View.GONE}" />
 
         <ImageView
             android:id="@+id/ivList"
