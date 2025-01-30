@@ -36,16 +36,17 @@ class MainActivity : AppCompatActivity() {
             val fragment = DetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(DetailFragment.PHOTO_URL, selectedImage.urls?.small)
+                    putString(DetailFragment.PHOTO_NAME, selectedImage.description)
                 }
             }
             setFragment(fragment)
         }
         binding.rvImage.adapter = adapter
         binding.rvImage.layoutManager = linearLayoutManager
-        binding.ivList.setOnClickListener {
-            binding.ivList.isSelected = !binding.ivList.isSelected
+        binding.toolbar.ivList.setOnClickListener {
+            binding.toolbar.ivList.isSelected = !binding.toolbar.ivList.isSelected
 
-            binding.rvImage.layoutManager = if (binding.ivList.isSelected) {
+            binding.rvImage.layoutManager = if (binding.toolbar.ivList.isSelected) {
                 gridLayoutManager
             } else {
                 linearLayoutManager
@@ -83,5 +84,10 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fv, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.sv.clearFocus()
     }
 }
