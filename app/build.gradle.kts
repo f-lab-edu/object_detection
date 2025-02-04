@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {
@@ -87,6 +88,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.phto.view)
     implementation(libs.view.pager2)
+    implementation(libs.dagger.hilt)
+    ksp(libs.dagger.hilt.compiler)
     ksp(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
