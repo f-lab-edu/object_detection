@@ -17,9 +17,10 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.example.objectdetection.MainViewModel
 import com.example.objectdetection.R
 import com.example.objectdetection.databinding.FragmentDetailBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
-
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
     companion object {
         private const val PHOTO_URL = "photoUrl"

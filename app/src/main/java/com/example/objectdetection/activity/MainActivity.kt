@@ -13,7 +13,9 @@ import com.example.objectdetection.MainViewModel
 import com.example.objectdetection.R
 import com.example.objectdetection.databinding.ActivityMainBinding
 import com.example.objectdetection.fragment.DetailViewPagerFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ImageListAdapter
