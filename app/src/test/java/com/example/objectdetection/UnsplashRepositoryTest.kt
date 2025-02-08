@@ -28,6 +28,7 @@ class UnsplashRepositoryTest {
 
     @Test
     fun responseTest() = runTest {
+        println("Given : Mock 응답 데이터 설정 (검색 결과 1개 포함)")
         val mockResponse = PhotoResponseItem(
             listOf(
                 Photo(
@@ -82,13 +83,12 @@ class UnsplashRepositoryTest {
 
         coEvery { apiService.searchPhotos(any(), any()) } returns mockResponse
 
+        println("When : 실제 API를 호출하여 검색 요청 수행")
         val result = repository.searchPhotos("cat")
 
+        println("Then : 반환된 데이터가 기대 값과 일치 하는지 검증")
         assertEquals(1, result.size)
-
         coVerify { apiService.searchPhotos(authorization = "Client-ID ${BuildConfig.UNSPLASH_ACCESS_KEY}", "cat") }
 
     }
-
-
 }

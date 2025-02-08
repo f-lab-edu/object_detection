@@ -47,6 +47,7 @@ class MainViewModelTest {
 
     @Test
     fun testSearchPhotosSuccess() = runTest {
+        println("Given : API가 정상적으로 응답하도록 mock 데이터 설정")
         val mockPhotos = listOf(
             Photo(
                 blur_hash = "LDCtq6Me0_kp3mof%MofUwkp,cRP",
@@ -102,10 +103,12 @@ class MainViewModelTest {
         }
         viewModel.photos.observeForever(observer)
 
+        println("When : searchPhotos 호출")
         viewModel.searchPhotos(query)
 
         advanceUntilIdle()
 
+        println("Then : API 호출되었는지 검증 & 반환된 데이터가 올바른지 검증")
         coVerify { unsplashRepository.searchPhotos(query) }
 
         viewModel.photos.removeObserver(observer)
@@ -113,6 +116,7 @@ class MainViewModelTest {
 
     @Test
     fun testSearchPhotosFailure() = runTest {
+        println("Given : API 호출이 실패하도록 설정")
         val exceptionMessage = "API Error"
 
         coEvery { unsplashRepository.searchPhotos(query) } throws RuntimeException(exceptionMessage)
@@ -122,10 +126,12 @@ class MainViewModelTest {
         }
         viewModel.apiError.observeForever(observer)
 
+        println("When : searchPhotos 호출")
         viewModel.searchPhotos(query)
 
         advanceUntilIdle()
 
+        println("Then : API 호출 되었는지 검증 & 에러 메시지 전달되었는지 검증")
         coVerify { unsplashRepository.searchPhotos(query) }
 
         viewModel.apiError.removeObserver(observer)
