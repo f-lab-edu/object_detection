@@ -1,94 +1,113 @@
 package com.example.objectdetection
 
-import com.example.objectdetection.data.Links
-import com.example.objectdetection.data.LinksX
-import com.example.objectdetection.data.Photo
-import com.example.objectdetection.data.PhotoResponseItem
-import com.example.objectdetection.data.ProfileImage
-import com.example.objectdetection.data.Urls
-import com.example.objectdetection.data.User
 import com.example.objectdetection.repository.UnsplashRepository
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import retrofit2.Retrofit
 
 class UnsplashRepositoryTest {
     private lateinit var apiService: UnsplashApiService
     private lateinit var repository: UnsplashRepository
+    private lateinit var mockWebServer: MockWebServer
 
     @Before
     fun setup() {
-        apiService = mockk()
+        mockWebServer = MockWebServer()
+        mockWebServer.start()
+
+        val json = Json {
+            isLenient = true
+            ignoreUnknownKeys = true
+        }
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(mockWebServer.url("/"))
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+
+        apiService = retrofit.create(UnsplashApiService::class.java)
         repository = UnsplashRepository(apiService)
+    }
+
+    @After
+    fun teardown() {
+        mockWebServer.shutdown()
     }
 
     @Test
     fun responseTest() = runTest {
-        println("Given : Mock 응답 데이터 설정 (검색 결과 1개 포함)")
-        val mockResponse = PhotoResponseItem(
-            listOf(
-                Photo(
-                    blur_hash = "LDCtq6Me0_kp3mof%MofUwkp,cRP",
-                    color = "#598c73",
-                    created_at = "2018-01-02T10:20:47Z",
-                    current_user_collections = listOf(),
-                    description = "Gipsy the Cat was sitting on a bookshelf one afternoon and just stared right at me, kinda saying: “Will you take a picture already?”",
-                    height = 3458,
-                    id = "gKXKBY-C-Dk",
-                    liked_by_user = false,
-                    likes = 1701,
-                    links = Links(
-                        download = "https://unsplash.com/photos/gKXKBY-C-Dk/download?ixid=M3w2OTU2NDZ8MHwxfHNlYXJjaHwxfHxjYXR8ZW58MHx8fHwxNzM4OTA5NDkzfDA",
-                        html = "https://unsplash.com/photos/black-and-white-cat-lying-on-brown-bamboo-chair-inside-room-gKXKBY-C-Dk",
-                        self = "https://api.unsplash.com/photos/black-and-white-cat-lying-on-brown-bamboo-chair-inside-room-gKXKBY-C-Dk"
-                    ),
-                    urls = Urls(
-                        full = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?crop=entropy&cs=srgb&fm=jpg&ixid=M3w2OTU2NDZ8MHwxfHNlYXJjaHwxfHxjYXR8ZW58MHx8fHwxNzM4OTA5NDkzfDA&ixlib=rb-4.0.3&q=85",
-                        raw = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixid=M3w2OTU2NDZ8MHwxfHNlYXJjaHwxfHxjYXR8ZW58MHx8fHwxNzM4OTA5NDkzfDA&ixlib=rb-4.0.3",
-                        regular = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2OTU2NDZ8MHwxfHNlYXJjaHwxfHxjYXR8ZW58MHx8fHwxNzM4OTA5NDkzfDA&ixlib=rb-4.0.3&q=80&w=1080",
-                        small = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2OTU2NDZ8MHwxfHNlYXJjaHwxfHxjYXR8ZW58MHx8fHwxNzM4OTA5NDkzfDA&ixlib=rb-4.0.3&q=80&w=400",
-                        thumb = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2OTU2NDZ8MHwxfHNlYXJjaHwxfHxjYXR8ZW58MHx8fHwxNzM4OTA5NDkzfDA&ixlib=rb-4.0.3&q=80&w=200"
-                    ),
-                    user = User(
-                        first_name = "Manja",
-                        id = "wBu1hC4QlL0",
-                        instagram_username = "makawee_photography",
-                        last_name = "Vitolic",
-                        links = LinksX(
-                            html = "https://unsplash.com/@madhatterzone",
-                            likes = "https://api.unsplash.com/users/madhatterzone/likes",
-                            photos = "https://api.unsplash.com/users/madhatterzone/photos",
-                            self = "https://api.unsplash.com/users/madhatterzone"
-                        ),
-                        name = "Manja Vitolic",
-                        portfolio_url = "https://www.instagram.com/makawee_photography/?hl=en",
-                        profile_image = ProfileImage(
-                            large = "https://images.unsplash.com/profile-fb-1514888261-0e72294039e0.jpg?ixlib=rb-4.0.3&crop=faces&fit=crop&w=128&h=128",
-                            medium = "https://images.unsplash.com/profile-fb-1514888261-0e72294039e0.jpg?ixlib=rb-4.0.3&crop=faces&fit=crop&w=64&h=64",
-                            small = "https://images.unsplash.com/profile-fb-1514888261-0e72294039e0.jpg?ixlib=rb-4.0.3&crop=faces&fit=crop&w=32&h=32"
-                        ),
-                        twitter_username = null,
-                        username = "madhatterzone"
-                    ),
-                    width = 5026
-                )
-            ),
-            total = 10000,
-            total_pages = 1000
-        )
+        println("Given : MockWebServer 에 mock 응답 설정")
+        val mockResponse = MockResponse()
+            .setResponseCode(200)
+            .setBody(
+                """{
+        "total": 133,
+        "total_pages": 7,
+        "results": [
+        {
+            "id": "eOLpJytrbsQ",
+            "created_at": "2014-11-18T14:35:36-05:00",
+            "width": 4000,
+            "height": 3000,
+            "color": "#A7A2A1",
+            "blur_hash": "LaLXMa9Fx[D%~q%MtQM|kDRjtRIU",
+            "likes": 286,
+            "liked_by_user": false,
+            "description": "A man drinking a coffee.",
+            "user": {
+            "id": "Ul0QVz12Goo",
+            "username": "ugmonk",
+            "name": "Jeff Sheldon",
+            "first_name": "Jeff",
+            "last_name": "Sheldon",
+            "instagram_username": "instantgrammer",
+            "twitter_username": "ugmonk",
+            "portfolio_url": "http://ugmonk.com/",
+            "profile_image": {
+            "small": "https://images.unsplash.com/profile-1441298803695-accd94000cac?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=32&w=32&s=7cfe3b93750cb0c93e2f7caec08b5a41",
+            "medium": "https://images.unsplash.com/profile-1441298803695-accd94000cac?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=64&w=64&s=5a9dc749c43ce5bd60870b129a40902f",
+            "large": "https://images.unsplash.com/profile-1441298803695-accd94000cac?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=128&w=128&s=32085a077889586df88bfbe406692202"
+        },
+            "links": {
+            "self": "https://api.unsplash.com/users/ugmonk",
+            "html": "http://unsplash.com/@ugmonk",
+            "photos": "https://api.unsplash.com/users/ugmonk/photos",
+            "likes": "https://api.unsplash.com/users/ugmonk/likes"
+        }
+        },
+            "current_user_collections": [],
+            "urls": {
+            "raw": "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f",
+            "full": "https://hd.unsplash.com/photo-1416339306562-f3d12fefd36f",
+            "regular": "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&s=92f3e02f63678acc8416d044e189f515",
+            "small": "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&s=263af33585f9d32af39d165b000845eb",
+            "thumb": "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=8aae34cf35df31a592f0bef16e6342ef"
+        },
+            "links": {
+            "self": "https://api.unsplash.com/photos/eOLpJytrbsQ",
+            "html": "http://unsplash.com/photos/eOLpJytrbsQ",
+            "download": "http://unsplash.com/photos/eOLpJytrbsQ/download"
+        }
+        }
+        ]
+        }""")
 
-        coEvery { apiService.searchPhotos(any(), any()) } returns mockResponse
+        mockWebServer.enqueue(mockResponse)
 
-        println("When : 실제 API를 호출하여 검색 요청 수행")
+        println("When : 검색 요청을 통해 결과 가져오기")
         val result = repository.searchPhotos("cat")
 
-        println("Then : 반환된 데이터가 기대 값과 일치 하는지 검증")
+        println("Then : 결과가 정상적으로 반환되었는지 검증")
+        assert(result.isNotEmpty())
         assertEquals(1, result.size)
-        coVerify { apiService.searchPhotos(authorization = "Client-ID ${BuildConfig.UNSPLASH_ACCESS_KEY}", "cat") }
-
+        assertEquals("eOLpJytrbsQ", result[0].id)
     }
 }

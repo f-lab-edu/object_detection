@@ -96,6 +96,7 @@ dependencies {
     testImplementation(libs.androidx.arch)
     testImplementation(libs.google.truth)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mock.web.server)
     androidTestImplementation(libs.androidx.arch)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
