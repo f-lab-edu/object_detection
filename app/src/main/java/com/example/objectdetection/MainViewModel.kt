@@ -14,12 +14,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.objectdetection.data.Photo
 import com.example.objectdetection.repository.UnsplashRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-    private val unsplashRepository = UnsplashRepository()
-
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val unsplashRepository: UnsplashRepository
+) : ViewModel() {
     private val _photos = MutableLiveData<List<Photo>?>()
     val photos: LiveData<List<Photo>?> = _photos
 
@@ -28,7 +31,6 @@ class MainViewModel : ViewModel() {
 
     private val _apiError = MutableLiveData<String?>()
     val apiError: LiveData<String?> = _apiError
-
 
     fun searchPhotos(query: String) {
         viewModelScope.launch {
