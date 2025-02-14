@@ -28,18 +28,11 @@ jobs:
       - name: Run Lint
         run: ./gradlew lint
 
-      - name: List build directory contents
-        run: |
-          echo "Listing build/test-results directory"
-          find ./build/test-results -type f
-          echo "Listing build/reports directory"
-          find ./build/reports -type f
-
       - name: Generate Test Report
         run: |
           mkdir -p reports
-          cp **/build/test-results/test/TEST-*.xml reports/test-results.xml
-          cp **/build/reports/lint-results.xml reports/lint-results.xml
+          cp $(find . -path '*/test-results/test/TEST-*.xml' -print) reports/test-results.xml
+          cp $(find . -path '*/reports/lint-results.xml' -print) reports/lint-results.xml
 
       - name: Add PR comment with test and lint results
         run: |
