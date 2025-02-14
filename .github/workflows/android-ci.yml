@@ -28,19 +28,22 @@ jobs:
       - name: Run Lint
         run: ./gradlew lint
 
-      - name: Generate Test Report
+      - name: Generate Test and Lint Reports
         run: |
           mkdir -p reports
-          cp $(find . -path '*/test-results/test/TEST-*.xml' -print) reports/test-results.xml
-          cp $(find . -path '*/reports/lint-results.xml' -print) reports/lint-results.xml
+          cp build/test-results/test/TEST-*.xml reports/test-results.xml || echo "No test results found"
+          cp build/reports/lint-results.xml reports/lint-results.xml || echo "No lint results found"
 
       - name: Add PR comment with test and lint results
         run: |
-          TEST_RESULTS=$(cat reports/test-results.xml)
-          LINT_RESULTS=$(cat reports/lint-results.xml)
+          # Capture test results and lint results into variables
+          TEST_RESULTS=$(cat reports/test-results.xml || echo "No test results found")
+          LINT_RESULTS=$(cat reports/lint-results.xml || echo "No lint results found")
 
+          # Format the comment body
           COMMENT_BODY="### Test Results\n$TEST_RESULTS\n\n### Lint Results\n$LINT_RESULTS"
 
+          # Post the comment to the PR
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
