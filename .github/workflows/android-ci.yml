@@ -28,6 +28,13 @@ jobs:
       - name: Run Lint
         run: ./gradlew lint
 
+      - name: List build directory contents
+        run: |
+          echo "Listing build/test-results directory"
+          find ./build/test-results -type f
+          echo "Listing build/reports directory"
+          find ./build/reports -type f
+
       - name: Generate Test Report
         run: |
           mkdir -p reports
